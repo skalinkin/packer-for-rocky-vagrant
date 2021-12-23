@@ -91,6 +91,12 @@
         "inline": [
           "vagrant box add builds\\virtualbox-rocky-8.box --force --name local/rocky-8"
         ]
+      },
+      {
+        "type": "vagrant-cloud",
+        "box_tag": "skalinkin/rocky-8",
+        "version": "2021.357.0",
+        "version_description": "VirtualBox 6.1.30, Vagrant 2.2.19. Docker, Chrome"
       }
     ]
   ]
