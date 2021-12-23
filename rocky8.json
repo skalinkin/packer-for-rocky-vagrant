@@ -1,87 +1,97 @@
 {
   "variables": {
-      "boot_wait": "5s",
-      "disk_size": "40960",
-      "iso_checksum": "53a62a72881b931bdad6b13bcece7c3a2d4ca9c4a2f1e1a8029d081dd25ea61f",
-      "iso_url": "https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-8.4-x86_64-boot.iso",
-      "memsize": "1024",
-      "numvcpus": "1",
-      "ssh_password" : "packer",
-      "ssh_username" : "packer",
-      "vm_name": "Rocky-8.4-x86_64"
-    },
-    "builders": [
-      {
-        "type": "vmware-iso",
-        "boot_command": [
-          "<tab><bs><bs><bs><bs><bs>text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+    "boot_wait": "5s",
+    "disk_size": "40960",
+    "iso_checksum": "0081f8b969d0cef426530f6d618b962c7a01e71eb12a40581a83241f22dfdc25",
+    "iso_url": "https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-8.5-x86_64-dvd1.iso",
+    "memsize": "1024",
+    "numvcpus": "1",
+    "ssh_password": "vagrant",
+    "ssh_username": "vagrant",
+    "vm_name": "Rocky-8.5-x86_64",
+    "ks_path": "ks.cfg"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "hard_drive_interface": "sata",
+      "boot_command": [
+        "<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `ks_path`}}<enter><wait>"
+      ],
+      "boot_wait": "{{ user `boot_wait` }}",
+      "disk_size": "{{ user `disk_size` }}",
+      "guest_os_type": "RedHat_64",
+      "headless": false,
+      "http_directory": "http",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S /sbin/halt -h -p",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_port": 22,
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_timeout": "30m",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "8192"
         ],
-        "boot_wait": "{{ user `boot_wait` }}",
-        "disk_size": "{{ user `disk_size` }}",
-        "disk_type_id": "0",
-        "guest_os_type": "centos-64",
-        "headless": false,
-        "http_directory": "http",
-        "iso_checksum": "{{ user `iso_checksum` }}",
-        "iso_url": "{{ user `iso_url` }}",
-        "shutdown_command": "echo 'packer'|sudo -S /sbin/halt -h -p",
-        "ssh_password": "{{ user `ssh_password` }}",
-        "ssh_port": 22,
-        "ssh_username": "{{ user `ssh_username` }}",
-        "ssh_timeout": "30m",
-        "vm_name": "{{ user `vm_name` }}",
-        "vmx_data": {
-          "memsize": "{{ user `memsize` }}",
-          "numvcpus": "{{ user `numvcpus` }}",
-          "virtualHW.version": "14"
-        }
-      },
-      {
-        "type": "virtualbox-iso",
-        "boot_command": [
-          "<tab><bs><bs><bs><bs><bs>text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "6"
         ],
-        "boot_wait": "{{ user `boot_wait` }}",
-        "disk_size": "{{ user `disk_size` }}",
-        "guest_os_type": "RedHat_64",
-        "headless": false,
-        "http_directory": "http",
-        "iso_checksum": "{{ user `iso_checksum` }}",
-        "iso_url": "{{ user `iso_url` }}",
-        "shutdown_command": "echo 'packer'|sudo -S /sbin/halt -h -p",
-        "ssh_password": "{{ user `ssh_password` }}",
-        "ssh_port": 22,
-        "ssh_username": "{{ user `ssh_username` }}",
-        "ssh_timeout": "30m",
-        "vm_name": "{{ user `vm_name` }}",
-        "vboxmanage": [
-          ["modifyvm", "{{.Name}}", "--memory", "{{ user `memsize` }}"],
-          ["modifyvm", "{{.Name}}", "--cpus", "{{ user `numvcpus` }}"]
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--vram",
+          "128"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--graphicscontroller",
+          "vmsvga"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--clipboard-mode",
+          "bidirectional"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--draganddrop",
+          "bidirectional"
         ]
-      }
-    ],
+      ]
+    }
+  ],
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'packer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "inline": [
-        "dnf -y update",
-        "dnf -y install python3",
-        "alternatives --set python /usr/bin/python3",
-        "python3 -m pip install -U pip",
-        "pip3 install ansible"
-      ]
-    },
-    {
-      "type": "ansible-local",
-      "playbook_file": "scripts/setup.yml"
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo 'packer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
-        "scripts/cleanup.sh"
+        "provision.sh",
+        "cleanup.sh"
       ]
     }
+  ],
+  "post-processors": [
+    [
+      {
+        "output": "builds/{{.Provider}}-rocky-8.box",
+        "type": "vagrant"
+      },
+      {
+        "type": "shell-local",
+        "inline": [
+          "vagrant box add builds\\virtualbox-rocky-8.box --force --name local/rocky-8"
+        ]
+      }
+    ]
   ]
 }
