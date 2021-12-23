@@ -1,0 +1,1 @@
+packer build -force .\rocky8.json

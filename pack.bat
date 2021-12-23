@@ -1,0 +1,1 @@
+packer build -force -except=vagrant-cloud .\rocky8.json
