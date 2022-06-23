@@ -2,13 +2,13 @@
   "variables": {
     "boot_wait": "5s",
     "disk_size": "40960",
-    "iso_checksum": "0081f8b969d0cef426530f6d618b962c7a01e71eb12a40581a83241f22dfdc25",
-    "iso_url": "https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-8.5-x86_64-dvd1.iso",
+    "iso_checksum": "1d48e0af63d07ff4e582a1819348e714c694e7fd33207f48879c2bc806960786",
+    "iso_url": "https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-8.6-x86_64-dvd1.iso",
     "memsize": "1024",
     "numvcpus": "1",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
-    "vm_name": "Rocky-8.5-x86_64",
+    "vm_name": "Rocky-8.6-x86_64",
     "ks_path": "ks.cfg"
   },
   "builders": [
@@ -95,8 +95,8 @@
       {
         "type": "vagrant-cloud",
         "box_tag": "skalinkin/rocky-8",
-        "version": "2021.357.0",
-        "version_description": "VirtualBox 6.1.30, Vagrant 2.2.19. Docker, Chrome"
+        "version": "2022.174.0",
+        "version_description": "VirtualBox 6.1.34, Vagrant 2.2.19, Docker 20.10.17"
       }
     ]
   ]

@@ -4,11 +4,15 @@
 dnf update --assumeyes
 dnf install epel-release -y
 
+# install VBox Guest Additions
+mount /home/vagrant/VBoxGuestAdditions.iso
+/mnt/VBoxLinuxAdditions.run
+
 
 # Install docker
 dnf install -y yum-utils
 dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-dnf install -y docker-ce-20.10.12 docker-ce-cli-20.10.12 containerd.io-1.4.12
+dnf install -y docker-ce-20.10.17 docker-ce-cli-20.10.17 containerd.io-1.6.6
 systemctl --now enable docker
 
 systemctl stop docker
@@ -19,7 +23,7 @@ echo "}" >> /etc/docker/daemon.json
 systemctl start docker
 
 # Install docker-compose
-curl -s https://api.github.com/repos/docker/compose/releases/tags/v2.2.2 \
+curl -s https://api.github.com/repos/docker/compose/releases/tags/v2.6.0 \
   | grep browser_download_url \
   | grep docker-compose-linux-x86_64 \
   | cut -d '"' -f 4 \
