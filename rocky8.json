@@ -67,6 +67,12 @@
           "{{.Name}}",
           "--draganddrop",
           "bidirectional"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--vrde",
+          "off"
         ]
       ]
     }
@@ -75,8 +81,24 @@
     {
       "type": "shell",
       "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "expect_disconnect": "true",
       "scripts": [
-        "provision.sh",
+        "provision.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "pause_before": "10s",
+      "scripts": [
+        "provision2.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "pause_before": "10s",
+      "scripts": [
         "cleanup.sh"
       ]
     }
