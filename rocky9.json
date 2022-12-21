@@ -2,13 +2,13 @@
   "variables": {
     "boot_wait": "5s",
     "disk_size": "40960",
-    "iso_checksum": "1d48e0af63d07ff4e582a1819348e714c694e7fd33207f48879c2bc806960786",
-    "iso_url": "https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-8.6-x86_64-dvd1.iso",
+    "iso_checksum": "69fa71d69a07c9d204da81767719a2af183d113bc87ee5f533f98a194a5a1f8a",
+    "iso_url": "https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.1-x86_64-dvd.iso",
     "memsize": "1024",
     "numvcpus": "1",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
-    "vm_name": "Rocky-8.6-x86_64",
+    "vm_name": "rocky-9.1-x86_64",
     "ks_path": "ks.cfg"
   },
   "builders": [
@@ -21,7 +21,7 @@
       "boot_wait": "{{ user `boot_wait` }}",
       "disk_size": "{{ user `disk_size` }}",
       "guest_os_type": "RedHat_64",
-      "headless": true,
+      "headless": false,
       "http_directory": "http",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
@@ -53,12 +53,6 @@
         [
           "modifyvm",
           "{{.Name}}",
-          "--graphicscontroller",
-          "vmsvga"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
           "--clipboard-mode",
           "bidirectional"
         ],
@@ -73,6 +67,12 @@
           "{{.Name}}",
           "--vrde",
           "off"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--nat-localhostreachable1",
+          "on"
         ]
       ]
     }
@@ -83,7 +83,7 @@
       "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "expect_disconnect": "true",
       "scripts": [
-        "provision.sh"
+        "scripts/vmtools.sh"
       ]
     },
     {
@@ -91,7 +91,7 @@
       "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "pause_before": "10s",
       "scripts": [
-        "provision2.sh"
+        "scripts/docker.sh"
       ]
     },
     {
@@ -99,27 +99,27 @@
       "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "pause_before": "10s",
       "scripts": [
-        "cleanup.sh"
+        "scripts/cleanup.sh"
       ]
     }
   ],
   "post-processors": [
     [
       {
-        "output": "builds/{{.Provider}}-rocky-8.box",
+        "output": "builds/{{.Provider}}-rocky-9.box",
         "type": "vagrant"
       },
       {
         "type": "shell-local",
         "inline": [
-          "vagrant box add builds\\virtualbox-rocky-8.box --force --name local/rocky-8"
+          "vagrant box add builds\\virtualbox-rocky-9.box --force --name local/rocky-9"
         ]
       },
       {
         "type": "vagrant-cloud",
-        "box_tag": "skalinkin/rocky-8",
+        "box_tag": "skalinkin/rocky-9",
         "version": "2022.174.1",
-        "version_description": "VirtualBox 6.1.34, Vagrant 2.2.19, Docker 20.10.17"
+        "version_description": "VirtualBox 7.0.4, Vagrant 2.3.4, Docker 20.10.21"
       }
     ]
   ]

@@ -1,1 +1,1 @@
-packer build -force -except=vagrant-cloud .\rocky8.json
+packer build -force -except=vagrant-cloud .\rocky9.json
