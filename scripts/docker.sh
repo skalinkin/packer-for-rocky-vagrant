@@ -2,7 +2,7 @@
 
 # Install docker
 dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-dnf install -y docker-ce-20.10.21 docker-ce-cli-20.10.21 containerd.io-1.6.9
+dnf install -y docker-ce-24.0.2 docker-ce-cli-24.0.2 containerd.io-1.7.2
 echo "{" >> /etc/docker/daemon.json
 echo "  \"data-root\": \"/media/persistent-storage/docker-data\"" >> /etc/docker/daemon.json
 echo "}" >> /etc/docker/daemon.json
