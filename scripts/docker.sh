@@ -8,7 +8,7 @@ echo "  \"data-root\": \"/media/persistent-storage/docker-data\"" >> /etc/docker
 echo "}" >> /etc/docker/daemon.json
 
 # Install docker-compose
-curl -s https://api.github.com/repos/docker/compose/releases/tags/v2.12.2 \
+curl -s https://api.github.com/repos/docker/compose/releases/tags/v2.18.1 \
   | grep browser_download_url \
   | grep docker-compose-linux-x86_64 \
   | cut -d '"' -f 4 \
