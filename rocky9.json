@@ -29,7 +29,7 @@
       "ssh_port": 22,
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_timeout": "30m",
-      "guest_additions_mode": "attach",
+      "guest_additions_mode": "disable",
       "vboxmanage": [
         [
           "modifyvm",
