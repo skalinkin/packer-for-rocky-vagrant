@@ -21,6 +21,8 @@ jobs:
         with:
           version: 1.9.1
       
+      - run: sudo apt install -y virtualbox
+
       - run: packer build ./rocky9.json
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
