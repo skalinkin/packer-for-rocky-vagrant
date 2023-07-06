@@ -4,8 +4,8 @@
     "disk_size": "128000",
     "iso_checksum": "cd43bb2671472471b1fc0a7a30113dfc9a56831516c46f4dbd12fb43bb4286d2",
     "iso_url": "https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.2-x86_64-dvd.iso",
-    "memsize": "1024",
-    "numvcpus": "1",
+    "memsize": "4096",
+    "numvcpus": "4",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "vm_name": "rocky-9.2-x86_64",
@@ -14,7 +14,6 @@
   "builders": [
     {
       "type": "virtualbox-iso",
-      "hard_drive_interface": "sata",
       "boot_command": [
         "<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `ks_path`}}<enter><wait>"
       ],
@@ -36,31 +35,19 @@
           "modifyvm",
           "{{.Name}}",
           "--memory",
-          "8192"
+          "{{ user `memsize` }}"
         ],
         [
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "6"
+          "{{ user `numvcpus` }}"
         ],
         [
           "modifyvm",
           "{{.Name}}",
           "--vram",
-          "128"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--clipboard-mode",
-          "bidirectional"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--draganddrop",
-          "bidirectional"
+          "64"
         ],
         [
           "modifyvm",
@@ -77,32 +64,7 @@
       ]
     }
   ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "expect_disconnect": "true",
-      "scripts": [
-        "scripts/vmtools.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "pause_before": "10s",
-      "scripts": [
-        "scripts/docker.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "pause_before": "10s",
-      "scripts": [
-        "scripts/cleanup.sh"
-      ]
-    }
-  ],
+  "provisioners": [],
   "post-processors": [
     [
       {
@@ -116,10 +78,10 @@
         ]
       },
       {
-        "type": "vagrant-cloud",
-        "box_tag": "skalinkin/rocky-9",
-        "version": "2023.186.0",
-        "version_description": "VirtualBox 7.0.8, Vagrant 2.3.7, Docker 24.0.2"
+        "type": "shell-local",
+        "inline": [
+          "vagrant up"
+        ]
       }
     ]
   ]
