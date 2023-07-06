@@ -4,8 +4,8 @@
     "disk_size": "128000",
     "iso_checksum": "cd43bb2671472471b1fc0a7a30113dfc9a56831516c46f4dbd12fb43bb4286d2",
     "iso_url": "https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.2-x86_64-dvd.iso",
-    "memsize": "4096",
-    "numvcpus": "4",
+    "memsize": "1028",
+    "numvcpus": "1",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "vm_name": "rocky-9.2-x86_64",
@@ -54,12 +54,6 @@
           "{{.Name}}",
           "--vrde",
           "off"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--nat-localhostreachable1",
-          "on"
         ]
       ]
     }
