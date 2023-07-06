@@ -78,10 +78,10 @@
         ]
       },
       {
-        "type": "shell-local",
-        "inline": [
-          "vagrant up"
-        ]
+        "type": "vagrant-cloud",
+        "box_tag": "skalinkin/rocky-9",
+        "version": "2023.186.0",
+        "version_description": "VirtualBox 7.0.8, Vagrant 2.3.7, Docker 24.0.2"
       }
     ]
   ]

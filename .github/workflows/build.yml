@@ -20,3 +20,5 @@ jobs:
         id: setup
         with:
           version: 1.9.1
+      
+      - run: packer build .\rocky9.json
