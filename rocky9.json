@@ -4,8 +4,8 @@
     "disk_size": "128000",
     "iso_checksum": "cd43bb2671472471b1fc0a7a30113dfc9a56831516c46f4dbd12fb43bb4286d2",
     "iso_url": "https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.2-x86_64-dvd.iso",
-    "memsize": "1024",
-    "numvcpus": "1",
+    "memsize": "4096",
+    "numvcpus": "4",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "vm_name": "rocky-9.2-x86_64",
@@ -14,10 +14,11 @@
   "builders": [
     {
       "type": "virtualbox-iso",
-      "hard_drive_interface": "sata",
       "boot_command": [
         "<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `ks_path`}}<enter><wait>"
       ],
+      "gfx_controller": "vmsvga",
+      "hard_drive_interface": "sata",
       "boot_wait": "{{ user `boot_wait` }}",
       "disk_size": "{{ user `disk_size` }}",
       "guest_os_type": "RedHat_64",
@@ -30,37 +31,25 @@
       "ssh_port": 22,
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_timeout": "30m",
-      "guest_additions_mode": "attach",
+      "guest_additions_mode": "disable",
       "vboxmanage": [
         [
           "modifyvm",
           "{{.Name}}",
           "--memory",
-          "8192"
+          "{{ user `memsize` }}"
         ],
         [
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "6"
+          "{{ user `numvcpus` }}"
         ],
         [
           "modifyvm",
           "{{.Name}}",
           "--vram",
-          "128"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--clipboard-mode",
-          "bidirectional"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--draganddrop",
-          "bidirectional"
+          "64"
         ],
         [
           "modifyvm",
@@ -77,32 +66,7 @@
       ]
     }
   ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "expect_disconnect": "true",
-      "scripts": [
-        "scripts/vmtools.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "pause_before": "10s",
-      "scripts": [
-        "scripts/docker.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "pause_before": "10s",
-      "scripts": [
-        "scripts/cleanup.sh"
-      ]
-    }
-  ],
+  "provisioners": [],
   "post-processors": [
     [
       {
