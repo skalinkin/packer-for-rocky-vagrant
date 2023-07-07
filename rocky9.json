@@ -99,6 +99,14 @@
       "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "pause_before": "10s",
       "scripts": [
+        "scripts/ssh.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "pause_before": "10s",
+      "scripts": [
         "scripts/cleanup.sh"
       ]
     }
